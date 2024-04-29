@@ -20,4 +20,8 @@
 
 ## Módulo HTTP - Dia 01
 
+- Neste dia, vimos como abrir um servidor e fazer requisições com ele, é possivel acessa-lo pelo localhost:300/user no navegador. Mas este não é a melhor prática de utilizar o método HTTP e criação de APIs. Veremos no próximo dia o melhor jeito, que é usando o Express.js o framework de JavaScript!
+
+## Introdução ao Express.js
+
 
