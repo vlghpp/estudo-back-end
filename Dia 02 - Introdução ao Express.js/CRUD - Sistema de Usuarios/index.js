@@ -1,5 +1,4 @@
 /*
-
 Express - CRUD
 Desafio: Usando o pacote express, crie todas as APIs (CRUD) de um sistema de USUÁRIOS. (Nesse desafio não é necessário manipular os dados dos usuários)
 (NÃO ERA NECESSÁRIO MANIPULAR, MAS IMPLEMENTEI UM CÓDIGO EM QUE MANIPULA :/ )
