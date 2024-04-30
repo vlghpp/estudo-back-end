@@ -24,4 +24,14 @@
 
 ## Introdução ao Express.js
 
+- Explicar sobre o Crud em execução, os metodos get/get id/post/put/delete 
 
+- Explicar sobre parametros (requsicao.params)
+
+- Explicar sobre body (requisicao.body)
+
+- Relembrar como exportar funções de outros arquivos .js (CRUD MASTER Sistema Alunos)
+
+- Explicar que vou continuar este módulo do express/node depois do modulo de banco de dados
+
+- Da uma breve explicação e introducao ao módulo de Banco de Dados que vou fazer logo em seguida
