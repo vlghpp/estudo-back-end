@@ -60,50 +60,37 @@ Você deve substituir as lógicas de cada API criada anteriormente pelas funçõ
 const express = require('express')
 const bancoDeDados = require('./bancoDeDados')
 const app = express()
-
+const acessoBanco = bancoDeDados.AlunosDatabase()
 app.use(express.json())
 
-app.get('/alunos', (requisicao, resposta) => {
-    resposta.status(200).send(alunos)
+app.get('/alunos', async (requisicao, resposta) => {
+    const mostrarAlunos = await acessoBanco.list()
+    resposta.status(200).send(mostrarAlunos)
 })
 
-app.get('/alunos/:id', (requisicao, resposta) => {
+app.get('/alunos/:id', async (requisicao, resposta) => {
     const id = requisicao.params.id
-    const encontrarAluno =  alunos.find(aluno => aluno.id == id)
-    if(encontrarAluno){
-        resposta.status(200).send(encontrarAluno)
-    }else{
-        resposta.status(404).send('Não foi possível encontrar o aluno designiado ao id!')
-    }
+    const alunoEspecifico = await acessoBanco.get(id)
+    resposta.status(200).send(alunoEspecifico)
 })
 
-app.post('/alunos', (requisicao, resposta) => {
+app.post('/alunos',async  (requisicao, resposta) => {
     const adicionarAluno = requisicao.body
-    alunos.push(adicionarAluno)
+    await acessoBanco.insert(adicionarAluno)
     resposta.status(200).send('Você conseguiu adicionar com sucesso um aluno!')
 })
 
-app.put('/alunos/:id', (requisicao, resposta) => {
+app.put('/alunos/:id',async  (requisicao, resposta) => {
     const id = requisicao.params.id
-    const encontrarAluno = alunos.findIndex(alunos => alunos.id == id)
-    if(encontrarAluno > -1){
-        const alunoAtualizado = requisicao.body
-        alunos[encontrarAluno] = alunoAtualizado
-        resposta.status(200).send('Você atualizou com sucesso o aluno desejado!')
-    }else{
-        resposta.status(404).send('Não foi possível encontrar o usuário desejado!')
-    }
+    const alunoAtualizado = requisicao.body
+    await acessoBanco.update(alunoAtualizado, id)
+    resposta.status(200).send("Você atualizou com sucesso!")
 })
 
-app.delete('/alunos/:id', (requisicao, resposta) => {
+app.delete('/alunos/:id',async  (requisicao, resposta) => {
     const id = requisicao.params.id
-    const encontrarAluno = alunos.findIndex(alunos => alunos.id == id)
-    if(encontrarAluno > -1){
-        alunos.splice(encontrarAluno, 1)
-        resposta.status(200).send('O aluno foi deletado com sucesso!')
-    }else{
-        resposta.status(404).send('Não foi possível encontrar o aluno desejado!')
-    }
+    acessoBanco.del(id)
+    resposta.status(200).send("Aluno removido com sucesso!")
 })
 
 app.listen(2222, () => {

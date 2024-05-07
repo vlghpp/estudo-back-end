@@ -77,15 +77,27 @@ Bom, agora que você já sabe como vamos iniciar nossos projetos ao se tratar co
     ```
 
 
+### Exportando funções de um arquivo .js
 
-- Explicar sobre o Crud em execução, os metodos get/get id/post/put/delete 
+Podemos exportar funções de um arquivo específico js para utilizar em um outro arquivo, por exemplo, tem-se um arquivo chamado calculadora.js que tem 4 funções: Somar, Diminuir, Multiplicar e Dividir e você tem outro arquivo js chamado utilizandoFuncoes.js que você utilza estas funções fazendo testes. E como isto é possível? Desta forma:
 
-- Explicar sobre parametros (requsicao.params)
+#### No arquivo calculadora.js
+```
+    module.exports = {
+        somar, 
+        diminuir,
+        multiplicar,
+        dividir
+    }
+```
 
-- Explicar sobre body (requisicao.body)
+#### No arquivo utilizandoFuncoes.js
 
-- Relembrar como exportar funções de outros arquivos .js (CRUD MASTER Sistema Alunos)
+```
+    const calculadora = require("./calculadora")
+    console.log(somar(2, 3))
+```
+Desta forma você está requisitando um pacote de ./calculadora e "cria um objeto da classe calculadora" e você tem acesso as funções daquele objeto.
 
-- Explicar que vou continuar este módulo do express/node depois do modulo de banco de dados
 
-- Da uma breve explicação e introducao ao módulo de Banco de Dados que vou fazer logo em seguida
+## AGORA VAMOS PARA O MÓDULO DE BANCO DE DADOS DAR CONTINUIDADE AO CONTEÚDO, VOLTAMOS PARA O MÓDULO DE EXPRESS.JS 2 DEPOIS DE TERMINAR O BANCO DE DADOS.
