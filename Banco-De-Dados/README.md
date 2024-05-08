@@ -46,5 +46,17 @@ OBS: Neste diretório vamos estar utilizando o Postgrees
 
 #### Texto
 - character varying (cadeia de caracteres variável) ou var char - Define um limite de caracteres em um dado, por exemplo, um var char de 10, a informação que o banco de dados pode receber é de uma cadeia de caracteres de até 10 caracteres, ou seja, pode receber 1 ou 10.
--character (cadeia  de caracteres fixa) - O banco de dados reserva 
+-character (cadeia  de caracteres fixa) - O banco de dados reserva uma quantidade específica de caracteres, por exemplo 10, e mantém o espaço lá, mesmo estando vazio.
+- text (texto de tamanho variável) - Pode colocar quantos caracteres quiser.
+
+#### Data e Hora
+- date (data)
+- time (hora sem fuso horário)
+- timestamp (data e hora com fuso horário)
+- interval (intervalo de tempo)
+
+#### Booleano
+
+- boolean (verdadeiro ou falso)
+
 
