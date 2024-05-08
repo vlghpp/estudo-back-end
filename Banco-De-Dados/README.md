@@ -12,7 +12,7 @@ Um banco de dados relacional é um sistema de armazenamento e organização de i
 
 ### SGBD
 
-Um Sistema de Gerenciamento de Banco de Dados (SGBD), como o Azure Data Studio (o que vai ser utilizado neste diretório sobre BD), é uma ferrament a de software utilizada para gerenciar, armazenar, organizar, consultar e manupular grandes volumes de dados.
+Um Sistema de Gerenciamento de Banco de Dados (SGBD), como o Azure Data Studio (o que vai ser utilizado neste diretório sobre BD), é uma ferramenta a de software utilizada para gerenciar, armazenar, organizar, consultar e manupular grandes volumes de dados.
 Ele fornece uma interface gráfica e recursos de linha de comando para criar e gerenciar bancos de dados relacionais, executar consultas, monitorar desempenho, implementar medidas de segurança e realizar tarefas administrativas relacionadas aos dados.
 
 ### Tabela
