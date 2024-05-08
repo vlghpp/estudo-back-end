@@ -1,0 +1,1 @@
+# Este é um repositório de estudos no qual, com base em um curso que estou fazendo, estou criando passo a passos e documentação sobre o que estou aprendendo, com o objetivo de que no futuro outra pessoa, que não tenha recursos financeiros, também possa aprender!
