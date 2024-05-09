@@ -32,7 +32,7 @@ Dados são informações reais que são armazenadas em uma tabela de um banco de
 Uma linha é uma estrutura que define a coleção inteira de um registro, por exemplo, o nome, idade e endereço são localizados na mesma linha de uma pessoa específica.
 
 
-## Dia 03 - Data Definition Language ou também DDL
+## Dia 02 - Data Definition Language ou também DDL
 
 OBS: Neste diretório vamos estar utilizando o Postgrees
 
@@ -59,4 +59,22 @@ OBS: Neste diretório vamos estar utilizando o Postgrees
 
 - boolean (verdadeiro ou falso)
 
+## Dia 03 - Primeira Modelagem
 
+Para fazer nossa primeira modelagem vamos utilizar o site [dbdiagram.io](https://dbdiagram.io/home), nele podemos criar tabelas de banco de dados e atribuir seus tipos.
+
+### Exemplo:
+
+![imagem](https://i.imgur.com/IQQh9Kx.png)
+
+Aqui tempos 7 variaveis para nosso banco de dados, e ao seus lados o tipo delas, como já visto antes no __Dia 02 - DDL__
+
+- Resultado
+
+![imagem](https://i.imgur.com/QA3ZNbJ.png)
+
+### OBS: No diretório (Dia 03 - Primeira Modelagem > index.js) tem um exercicio, fazer!!
+
+- Meu resultado:
+
+![imagem](https://i.imgur.com/oJ6KXke.png)
