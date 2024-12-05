@@ -76,6 +76,10 @@ Bom, agora que você já sabe como vamos iniciar nossos projetos ao se tratar co
         NOTA: caso você tenha mais de um parametro na rota ela também aparecera no requisicao.params!
     ```
 
+    - Put x Patch 
+        > - PUT pode ser usado em situações em que há acesso ao recurso completo (por exemplo, todos os campos do documento a ser atualizado) ou a necessidade de substituir totalmente o recurso. É necessário enviar sempre o recurso completo (com todos os campos);
+        > - PATCH pode ser usado para atualizações parciais e pode receber apenas o campo que será atualizado, o que pode significar menor volume de tráfego de dados.
+
 
 ### Exportando funções de um arquivo .js
 
@@ -100,4 +104,160 @@ Podemos exportar funções de um arquivo específico js para utilizar em um outr
 Desta forma você está requisitando um pacote de ./calculadora e "cria um objeto da classe calculadora" e você tem acesso as funções daquele objeto.
 
 
-## AGORA VAMOS PARA O MÓDULO DE BANCO DE DADOS DAR CONTINUIDADE AO CONTEÚDO, VOLTAMOS PARA O MÓDULO DE EXPRESS.JS 2 DEPOIS DE TERMINAR O BANCO DE DADOS.
+##  Introdução a protocolos 
+
+Protocolo da camada 5 (aplicação) é os navegadores, e aplicativos. Serve como um protocolo de cliente-servidor, onde centraliza as demandas para o servidor e o cliente só faz a requisição como: GET, POST, PATCH, DELETE.
+
+### HTTP X P2P
+
+P2P ou peer-two-peer é uma maneira de tranferência de dados também, assim como o HTTP, mas ao invés de centralizar as demandas no servidor o cliente colabora nesse processo. Não há mais uma clara divisão entre Cliente-Servidor, cada cliente também é servidor e vice-versa. Isto é útil quando você precisa distribuir um trabalho ou necessita baixar algo de vários lugares diferentes. Um exemplo de P2P é o Torrent, BitTorrent.
+
+### FTP 
+
+File Transport Protocol é um protocolo para transferência de arquivos na internet.
+
+### BitTorrent (P2P)
+
+Além de ser um protocolo, também é um aplicativo para troca de arquivos na internet.
+
+### SMTP
+
+Simple Mail Transfer Protocol (protocolo simples de tranferência de e-mail), protocolo para enviar e-mails.
+
+### Portas Padrão
+
+| Porta  | Padrão |
+| ------------- | ------------- |
+| 80  | Padrão HTTP  |
+| 443  | Padrão HTTPS  |
+| 5432  | Usada pra conexão com serviços do banco de dados PostgresSQL  |
+| 3306/3307  | Usada pra conexão com o banco MySQL  |
+| 587 | Utilizada para conexões SMTP (Simple Mail Transfer Protocol, o protocolo de envio e recebimento de e-mails)  |
+| de 1023* até 65535  | Livres para uso  |
+
+
+### Protegendo a API 
+
+Há algumas ferramentas de captura de pacotes como Wireshark que escutam baseado em um filtro a troca de informações entre Cliente-Servidor, então, métodos como POST, GET podem ser capturados.
+Como resolver isso:
+
+Atualmente o código da api AluraBooks está dessa forma, sendo servido por http (não seguro)
+```javascript
+ server.listen(8000, () => {
+  console.log("API disponível em http://localhost:8000")
+})
+
+```
+
+Uma forma de deixar mais seguro é usando https, que usa criptografia. Então é possivel gerar uma senha para o servidor (server.key) e um certificado (server.crt), essa forma encriptografando para https.
+
+**Considerações inportantes antes de executar o comando OpenSSL**
+- Comando deve ser executado na pasta onde há o arquivo que está servindo a API
+- É necessário fazer o 'require' do https `const https = require("https")`
+- Agora pode mudar o código
+
+Usando ferramenta OpenSSL para fazer essas chaves: 
+<br>
+
+`openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt`
+
+Agora transformando nossa API para https:
+
+```javascript
+https.createServer(
+    {
+    key: fs.readFileSync('server.key'),
+    cert: fs.readFileSync('server.crt')
+    },
+    server
+).listen(8000, () => {
+    console.log("API disponível em https://localhost:8000")
+})
+
+```
+
+Dessa forma ele lê os conteudos dos arquivos gerados pelo OpenSSL e coloca a API para escutar na porta 8000 do https.
+Agora o endereço que era `http://localhost:8000` vira `https://localhost:8000`.
+
+### Query Params x Req Params
+
+Req params, é quando definimos `https://localhost/livros/:nome`, dessa forma referência uma parte da URL para identificar um valor específico.
+
+
+```javascript
+app.get('/livros/:nome', (req, res) => {
+    return res.status(200).send(`Bem vindo, ${req.params.nome}`)
+})
+```
+
+Também podemos utilizar os Query Params, são parâmetros enviados atráves dos “?”. Exemplo `https://localhost:8000/?nome=henrique`, os query params são mais utilizados quando queremos fazer um redirecionamento ou quando temos muitos parâmetros na url
+
+Repare como ficou nossa rota inicial agora, para pegarmos essa Query Stringnós chamamos o req.query.name, é o mesmo parâmetro que passamos na url o ?name
+
+```javascript
+app.get('/', (req, res) => {
+    return res.status(200).send(`Bem vindo, ${req.query.nome}`)
+})
+```
+
+#### Query Strings
+
+Podemos utilizar as query strings para enviar parâmetros em uma URL, por exemplo fazendo da seguinte forma: `http://localhost/livros?categoria=3`. Mas e se além da categoria, também quiséssemos filtrar pelo autor? Nesse caso, faríamos assim: `/livros?categoria=3&autor=1`. Ou seja, utilizamos o caractere & para separar os nomes dos parâmetros que configuramos.
+
+Pensando agora em outro exemplo, mais complexo, poderíamos ter a seguinte URL:
+
+`http://eletronicos.com/products?search=TV&maxPrice=1000&brand=ACME&model=XPTO&delivery=free&`
+
+Nesse caso, a URL representa uma busca por uma TV da marca ACME e modelo XPTO, com preço máximo de R$ 1.000,00 e taxa de entrega grátis. O interessante de ter os parâmetros na URL, é que além de ficar óbvio que o request é um GET, fica fácil para o usuário compartilhar a busca que ele fez, pois é só copiar e colar a URL já com todos os parâmetros. Se utilizássemos POST, ou qualquer outro método onde os parâmetros vão no corpo da mensagem, isso não seria possível.
+
+A especificação do HTTP não define um número máximo de parâmetros para uma URL, e nem mesmo um tamanho máximo para a URL (conforme a seção 3.2.1 da RFC 2616). Por isso, cada navegador e servidor pode implementar o seu próprio limite máximo, embora haja uma convenção de suportar até 2000 caracteres. Portanto, quando estiver criando seus requests, caso eles estejam muito grandes, considere convertê-los para um POST, ou talvez refatorar as URLs para simplificar o envio de parâmetros.
+
+
+## HTTP 1.1 X HTTP 2.0
+
+As maiores diferenças entre esses dois protocolos é que o primeiro deixa a desejar as requisições sequenciais, ou seja, cada vez que fazemos um REQUEST, temos que esperar terminar para começar o outro no contexto de uma conexão TCP, que é o canal por onde as mensagens passam.
+
+HTTP 1.1 - Deixa a desejar: Requisições sequenciais
+HTTP 2.0 - Oferece: Multiplexação
+
+HTTP 1.1 - Deixa a desejar: Cabeçalhos textuais
+HTTP 2.0 - Oferece: Compactação de cabeçalho
+
+HTTP 1.1 - Deixa a desejar: Request obrigatório
+HTTP 2.0 - Oferece: Server push
+
+
+Utilizando a biblioteca spdy para utilizar o HTTP 2.0
+- Importante utilizar o OpenSSL para habilitar o HTTPS: `openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout server.key -out server.crt`
+- Importante ter instalado: `npm i spdy`
+- Importante fazer o "build" atualizado da nossa aplicação, que é como se empacotássemos a aplicação para produção `npm run build`
+
+
+```javascript
+const spdy = require("spdy")
+const express = require("express")
+const fs = require("fs")
+
+const app = express()
+
+app.use(express.static("build"))
+
+spdy.createServer(
+    {
+        key: fs.readFileSync("./server.key"),
+        cert: fs.readFileSync("./server.crt")
+    },
+    app
+).listen(3002, (err) => {
+    if(err){
+        throw new Error(err)
+    }
+    console.log("Listening on port 3002")
+})
+
+```
+
+
+## Api Express com MongoDB
+
+Modelo é um objeto que representa uma coleção na base de dados.
