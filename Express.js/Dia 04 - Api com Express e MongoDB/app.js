@@ -1,7 +1,8 @@
 import "dotenv/config"
 import express, { json } from 'express'
 import { connectDataBase } from "./src/config/dbConnect.js"
-import router from './src/rotas/router.js'
+import router_books from './src/rotas/router_books.js'
+import router_authors from "./src/rotas/router_authors.js"
 const app = express()
 
 app.use(json())
@@ -24,7 +25,9 @@ conexao.once("open", ()=>{
 
 
 //quando for rodado alguma rota get com /books ele vai rodar as rotas/router.js
-app.use('/books', router)
+app.use('/books', router_books)
+app.use('/authors', router_authors)
+
 
 const port = 6002
 
