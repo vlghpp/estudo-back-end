@@ -1,6 +1,8 @@
 import livro from '../models/Livro.js'
-
+import { autor } from '../models/Autor.js'
 class LivroController{
+
+
     static async getBooks(req, res){
         try{
             const livros = await livro.find({})
@@ -19,22 +21,39 @@ class LivroController{
             res.status(200).send(bookFounded)
         }catch(error){
             res.status(500).json({
-                message: `${error.message} - ERRO INTERNO DO SERVIDOR`
-            })
+            message: `${error.message} - ERRO INTERNO DO SERVIDOR`
+        })
+        }
+    }
+
+    static async getBookPublisher(req, res){
+        const publisher = req.query.publisher
+        try{
+            const booksForPublisher = await livro.find({editora: publisher})
+            res.status(200).send(booksForPublisher)
+        }catch(error){
+            res.status(500).json({
+            message: `${error.message} - ERRO INTERNO DO SERVIDOR`
+        })
         }
     }
     
     static async sendBook(req, res){
+        const newLivro = req.body
         try{
-            const newLivro = await livro.create((req.body))
+            const authorFounded = await autor.findById(newLivro.author)
+            //faz conexão das coleçãoes livros e autores
+            //pega o novo livro, e faz uma atualização com o autor que é encontrado passado pelo id do autor
+            const bookCompleted = { ...newLivro, autor: {...authorFounded._doc}}
+            const boookCreated = await livro.create(bookCompleted)
             res.status(201).json({
                 message: "CRIADO COM SUCESSO!",
-                book: newLivro
+                book: boookCreated
             })
         }catch(error){
             res.status(500).json({
-                message: `${error.message} - ERRO INTERNO DO SERVIDOR`
-            })
+            message: `${error.message} - ERRO INTERNO DO SERVIDOR`
+        })
         }
     }
 
@@ -47,8 +66,8 @@ class LivroController{
             })
         }catch(error){
             res.status(500).json({
-                message: `${error.message} - ERRO INTERNO DO SERVIDOR`
-            })
+            message: `${error.message} - ERRO INTERNO DO SERVIDOR`
+        })
         }
     }
     
@@ -61,8 +80,8 @@ class LivroController{
             })
         }catch(error){
             res.status(500).json({
-                message: `${error.message} - ERRO INTERNO DO SERVIDOR`
-            })
+            message: `${error.message} - ERRO INTERNO DO SERVIDOR`
+        })
         }
     }
 }

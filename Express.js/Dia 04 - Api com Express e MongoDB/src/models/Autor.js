@@ -10,4 +10,4 @@ const autor = mongoose.model("autores", autorSchema)
 
 
 //importa autor para usar como tipo em Livro
-export { autor, autorSchema}
+export { autor, autorSchema }
