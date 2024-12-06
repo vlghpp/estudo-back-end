@@ -1,6 +1,7 @@
 import "dotenv/config"
 import express, { json } from 'express'
 import { connectDataBase } from "./src/config/dbConnect.js"
+import manipulador404 from "./src/middlewares/manipulador404.js"
 import router_books from './src/rotas/router_books.js'
 import router_authors from "./src/rotas/router_authors.js"
 import manipuladorDeErros from './src/middlewares/manipuladorDeErros.js'

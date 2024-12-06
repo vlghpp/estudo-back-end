@@ -1,5 +1,5 @@
 import livro from '../models/Livro.js'
-import { autor } from '../models/Autor.js'
+import { autores } from '../models/Autor.js'
 import NaoEncontrado from '../erros/NaoEncontrado.js'
 class LivroController{
 
@@ -47,10 +47,10 @@ class LivroController{
         const newLivro = req.body
         try{
             //faz conexão das coleçãoes livros e autores
-            //pega o novo livro, e faz uma atualização com o autor que é encontrado passado pelo id do autor
-            const authorFounded = await autor.findById(newLivro.author)
+            //pega o novo livro, e faz uma atualização com o autores que é encontrado passado pelo id do autores
+            const authorFounded = await autores.findById(newLivro.author)
             if(authorFounded !== null){
-                const bookCompleted = { ...newLivro, autor: {...authorFounded._doc}}
+                const bookCompleted = { ...newLivro, autores: {...authorFounded._doc}}
                 const boookCreated = await livro.create(bookCompleted)
                 res.status(201).json({
                     message: "CRIADO COM SUCESSO!",
