@@ -271,3 +271,63 @@ Porém, em ambos os tipos de banco existem três tipos de relacionamentos entre 
 1. **_Relacionamento “um para um”_** (one-to-one ou 1:1), quando um registro está conectado a somente outro registro em outro conjunto de dados. Exemplo: uma pessoa registrada no sistema da nossa livraria tem somente um CPF relacionado a ela, e não é possível que duas pessoas diferentes tenham o mesmo CPF ou uma pessoa ter dois CPFs.
 2. **_Relacionamento “um para muitos” _**(one-to-many ou 1:n), quando um registro pode ser conectado a mais de um registro em outro conjunto de dados. Exemplo: as pessoas cadastradas em nossa livraria podem fornecer mais de um número de telefone celular, porém, cada um destes números de celular pode estar associado a apenas uma pessoa por vez.
 3. **_Relacionamento “muitos para muitos”_** (many-to-many ou n:m), quando mais de um registro pode estar relacionado a mais de um registro em outro conjunto. Exemplo: um livro pode ter mais de um autor, ao mesmo tempo que este mesmo autor pode ter escrito vários livros.
+
+
+## MongoDB - Embed x Reference
+
+### Embedding
+Ao contrário do SQL, o MongoDB segue o princípio de “dados que são acessados juntos devem ser armazenados juntos”.
+
+Pensando assim, embedding significa incorporar dados que são relacionados e inseri-los em um documento. É usado para simplificar as consultas (queries) aos dados e melhorar a performance geral das ferramentas nas consultas.
+
+Veja abaixo um exemplo de documento autor com um array de livros incorporado ao restante dos dados. Arrays de objetos são uma forma comum de embedding de dados.
+
+
+```json
+{
+ "_id": ObjectId("579a7256f245878acabac457c"),
+ "nome": "JRR Tolkien",
+ "livros": [
+   {"titulo": "O Senhor dos Anéis", "paginas": 500},
+   {"titulo": "O Hobbit", "paginas": 200},
+   {"titulo": "O Silmarillion", "paginas": 400}
+ ]
+}
+```
+
+Porém, incorporar dados em um único documento pode criar documentos muito grandes, o que pode acabar prejudicando a performance da aplicação, pois um documento deve ser carregado em memória por inteiro. Além disso, pode também fazer com que novos dados sejam incorporados indefinidamente a um único objeto e aumentando o tamanho em bytes além do limite de 16 mb por documento de um objeto BSON.
+
+
+### Referencing
+
+Referencing significa fazer referência a documentos em outra coleção. Nesse caso, os dados são guardados em coleções separadas, mas ainda é importante que mantenham vínculo entre eles. A referência é feita através de um campo específico do documento, normalmente o campo id ou equivalente.
+
+A agregação de dados via reference visa evitar duplicação de dados (um aspecto muito importante no SQL, também chamada de “normalização de dados”) e também gerenciar o tamanho dos documentos para evitar a criação de documentos muito grandes, que prejudicariam a performance do sistema.
+
+Por outro lado, a junção de dados via referência faz com que uma consulta se transforme em duas ou várias. Por exemplo, uma consulta aos dados de um livro resultaria em consultas tanto na coleção livros quanto na coleção autores, o que consome mais recursos e pode impactar a performance de leitura.
+
+
+```json
+{
+ "_id": ObjectId("9gPOwsIJaf5knkzpvYNlk9flz"),
+ "nome": "JRR Tolkien",
+ "livros": [
+   ObjectId("ctstNHEEKCLwTN7gN7KgNprYb"),
+   ObjectId("qdQwKNumukFzuSYh58WKLN3TV"),
+   ObjectId("KNUeheO0UbtpFYwLuJpdwbD5P")
+ ]
+}
+
+```
+
+| 	|               	**Embedding**               	|
+|:---:|:-------------------------------------------------:|
+| PRO | Dados retornados em uma única consulta        	|
+| PRO | atualização e exclusão de dados em única operação |
+| CON | duplicação de dados                           	|
+| CON | documentos maiores                            	|
+<br>
+| 	|              	**Referencing**              	|
+| PRO | Não há duplicação de dados                    	|
+| PRO | documentos menores                            	|
+| CON | necessário "unir" dados de múltiplos documentos   |
