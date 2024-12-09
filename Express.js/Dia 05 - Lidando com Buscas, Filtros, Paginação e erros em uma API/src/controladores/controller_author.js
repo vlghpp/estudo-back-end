@@ -4,8 +4,9 @@ import NaoEncontrado from "../erros/NaoEncontrado.js"
 class AuthorController{
     static async getAuthors(req, res, next){
         try{
-            const authors = await autor.find({})
-            res.status(200).json(authors)
+            const authors =  autores.find()
+            req.resultado = authors
+            next()
         }catch (error){
             next(error)
         }
@@ -14,7 +15,7 @@ class AuthorController{
     static async getAuthorId(req, res, next){
         try{
             const id = req.params.id
-            const authorFounded = await autor.findById(id)
+            const authorFounded = await autores.findById(id)
 
             if(authorFounded !== null){
                 res.status(200).send(authorFounded)
@@ -28,7 +29,7 @@ class AuthorController{
     
     static async sendAuthor(req, res, next){
         try{
-            const newAuthor = await autor.create((req.body))
+            const newAuthor = await autores.create((req.body))
             res.status(201).json({
                 message: "CRIADO COM SUCESSO!",
                 author: newAuthor
@@ -41,7 +42,7 @@ class AuthorController{
     static async updateAuthor(req, res, next){
         try{
             const id = req.params.id
-            const authorUpdated = await autor.findByIdAndUpdate(id, req.body)
+            const authorUpdated = await autores.findByIdAndUpdate(id, req.body)
             if(authorUpdated !== null){
                 res.status(200).json({
                     message: "AUTOR ATUALIZADO COM SUCESSO!"
@@ -58,7 +59,7 @@ class AuthorController{
     static async deleteAuthor(req, res, next){
         try{
             const id = req.params.id
-           const authorDeleted = await autor.findByIdAndDelete(id)
+           const authorDeleted = await autores.findByIdAndDelete(id)
            if (authorDeleted !== null){
                 res.status(200).json({
                     message: "AUTOR REMOVIDO COM SUCESSO!"
